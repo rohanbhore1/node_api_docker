@@ -1,6 +1,6 @@
 import supertest from 'supertest'
 import {app} from '../index'
-
+//1
 
 const newUserData ={
     "first_name":"tom",
@@ -23,8 +23,8 @@ const notEligibleAccount = {"email":"noto@eligible@gmail.com"}
  
 describe('account',()=>{
     describe('get all active account user route',()=>{
-        
-        describe('if active account exist',()=>{
+
+        describe('if active account holder user exist',()=>{
             it("should return 200",async ()=>{
                 await supertest(app)
                 .get('/account')
@@ -43,7 +43,7 @@ describe('account',()=>{
             })
         })
 
-        describe('if active account exist',()=>{
+        describe('if active account dose not exist',()=>{
             it("should return 404",async ()=>{
                 await supertest(app)
                 .get('/account')
@@ -58,7 +58,6 @@ describe('account',()=>{
     })
 
     describe('Activate account by email id route',()=>{
-
         describe('account activated success',()=>{
             it("should return 200",async ()=>{
                 await supertest(app)

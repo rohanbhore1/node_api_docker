@@ -22,7 +22,7 @@ export const createZipUser = async (req: Request, res: Response): Promise<void> 
       if (!results) {
         logger.error(error);
         return res.status(HttpStatus.DUPLICATE_CONTENT.code)
-          .send({ status: false,message: 'user exist'});
+          .send({message: 'user exist'});
       }else{
         const  user = results[0][0]
         return res.status(HttpStatus.OK.code).json({ message:'user created',user })

@@ -21,3 +21,11 @@ Start the Docker
 ```bash
    docker compose up -d
 ```
+
+Run the test case
+
+```bash
+   yarn jest
+```
+
+

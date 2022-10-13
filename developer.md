@@ -61,6 +61,6 @@ Developed node API
 
 ## Features improvement 
 
-- test case can be mocked 
+- test case can need to be mocked  
 - business logic separation can be done
 
