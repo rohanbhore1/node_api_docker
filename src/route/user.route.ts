@@ -7,9 +7,6 @@ router.route('/')
   .get(getZipAllUsers)
   .post(createZipUser);
 
-router.route('/:email')
+router.route('/email/:email?')
   .get(getZipUserByEmail)
-// router.get('/data/:email',getZipUserByEmail)
-// router.get('/api/admin/polls',RouterController.isNewAuthenticated,RouterController.checkPermission('Admin.Manage.Survey'),RouterController.getParentUser,RouterController.companyUsers,PollController.list);
-
 export default router;

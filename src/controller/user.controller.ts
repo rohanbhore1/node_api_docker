@@ -49,15 +49,14 @@ export const getZipAllUsers = async (req: Request, res: Response): Promise<void>
 export const getZipUserByEmail = async (req: Request, res: Response): Promise<void> => {
   try {
     logger.info(`${req.method} ${req.originalUrl}, fetching user`);
-    console.log("req.params",req.params)
-    const userEmail = req.params.email.trim()
+    const userEmail = String(req.query.email).trim().replace(/['"]+/g, '')
     database.query(QUERY.SELECT_USER, [userEmail], (error, results) => {
     if (!results[0]) {
       res.status(HttpStatus.NOT_FOUND.code)
       .send({ status: false, message: `user with ${userEmail} was not found`});
       }else{
-        const  newRes = results[0]
-        res.status(HttpStatus.OK.code).json({ newRes })
+        const  user = results[0]
+        res.status(HttpStatus.OK.code).json({ user })
       }
     })
   } catch (error) {

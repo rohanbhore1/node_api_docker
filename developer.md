@@ -20,7 +20,7 @@ Developed node API
 #### Get user by email id
 
 ```http
-  GET /api/items/email
+  GET /user/email?email=${email}
 ```
 
 | Parameter | Type     | Description                       |
@@ -33,7 +33,7 @@ Developed node API
   POST /user
 ```
 
-| Parameter | Type     | Description                       |
+| Body Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `first_name`      | `string` | **Required**. |
 | `last_name`      | `string` | **Required**.  |
@@ -52,16 +52,15 @@ Developed node API
 #### Activate Accounts for existing user
 
 ```http
-  POST /account/email
+  POST /account
 ```
 
-| Parameter | Type     | Description                       |
+| Body Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `email`      | `string` | **Required**. |
 
-## Features can be improved 
+## Features improvement 
 
-- routing input pattern 
-- test case can be in dynamic way 
+- test case can be mocked 
 - business logic separation can be done
 
