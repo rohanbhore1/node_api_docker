@@ -28,11 +28,16 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
   try {
     logger.info(`${req.method} ${req.originalUrl}, creating account`);
     const userEmail = req.body.email
+    if(!userEmail){
+      res.status(HttpStatus.BAD_REQUEST.code)
+      .send({ message: `email id is required`});
+      return
+    }
     //fetching the user details
   database.query(QUERY.SELECT_USER_TO_CREATE_ACCOUNT, [userEmail], (error, results) => {
     if (!results[0]) {
       logger.error(`${req.method} ${req.originalUrl},user by ${userEmail} was not found`);
-      res.status(HttpStatus.NOT_FOUND.code)
+      return res.status(HttpStatus.NOT_FOUND.code)
       .send({ message: `user by ${userEmail} was not found`});
       }else{
         const  {monthly_salary,monthly_expenses,is_active_account} = results[0]
@@ -41,7 +46,7 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
         // if account is already exist
         if (is_active_account) {
           logger.error(`${req.method} ${req.originalUrl}, account already exist`);
-          res.status(HttpStatus.DUPLICATE_CONTENT.code).json({ message:`account already exist for ${userEmail}` })
+          return res.status(HttpStatus.DUPLICATE_CONTENT.code).json({ message:`account already exist for ${userEmail}` })
         }
         else if (!shouldCreateAccount) {
           logger.error(`${req.method} ${req.originalUrl}, 'Not eligible create account'`);
@@ -52,7 +57,7 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
           database.query(QUERY.CREATE_ACCOUNT_PROCEDURE, [userEmail,shouldCreateAccount], (error, results) => {
             const  user = results[0][0]
             logger.info(`${req.method} ${req.originalUrl}, account created for ${userEmail}`);
-            res.status(HttpStatus.OK.code).json({ message:`account created for ${userEmail}`,user })
+            return res.status(HttpStatus.OK.code).json({ message:`account created for ${userEmail}`,user })
         })
         }
       }

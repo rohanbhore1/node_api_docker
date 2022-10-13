@@ -9,20 +9,25 @@ export const createZipUser = async (req: Request, res: Response): Promise<void> 
   try {
     logger.info(`${req.method} ${req.originalUrl}, creating user`);
     const {first_name,last_name,email,monthly_salary,monthly_expenses} = req.body
+    console.log("monthly_expenses",monthly_expenses)
+    if(!first_name || !last_name || !email || !monthly_salary || !monthly_expenses){
+         res.status(HttpStatus.BAD_REQUEST.code)
+      .send({ message: `some params are missing`});
+      return
+    }
     const userDetails = [
       first_name,last_name,email,monthly_salary,monthly_expenses
     ]
     database.query(QUERY.CREATE_USER_PROCEDURE, userDetails, (error, results) => {
       if (!results) {
         logger.error(error);
-        res.status(HttpStatus.DUPLICATE_CONTENT.code)
+        return res.status(HttpStatus.DUPLICATE_CONTENT.code)
           .send({ status: false,message: 'user exist'});
       }else{
         const  user = results[0][0]
-        res.status(HttpStatus.OK.code).json({ message:'user created',user })
+        return res.status(HttpStatus.OK.code).json({ message:'user created',user })
       }
     })
-    // const users: ZipUser[] = [];
   } catch (error) {
     throw error;
   }
@@ -34,10 +39,10 @@ export const getZipAllUsers = async (req: Request, res: Response): Promise<void>
     logger.info(`${req.method} ${req.originalUrl}, fetching users`);
     database.query(QUERY.SELECT_USERS, (error, users) => {
       if (!users) {
-        res.status(HttpStatus.NOT_FOUND.code)
+        return res.status(HttpStatus.NOT_FOUND.code)
           .send({ status: false, error: error, message: 'No user Found' });
       }else{
-        res.status(HttpStatus.OK.code).json({ users })
+        return res.status(HttpStatus.OK.code).json({ users })
       }
     })
   } catch (error) {
@@ -50,13 +55,18 @@ export const getZipUserByEmail = async (req: Request, res: Response): Promise<vo
   try {
     logger.info(`${req.method} ${req.originalUrl}, fetching user`);
     const userEmail = String(req.query.email).trim().replace(/['"]+/g, '')
+    if(!userEmail){
+      res.status(HttpStatus.BAD_REQUEST.code)
+      .send({ message: `email id is required`});
+      return
+    }
     database.query(QUERY.SELECT_USER, [userEmail], (error, results) => {
     if (!results[0]) {
-      res.status(HttpStatus.NOT_FOUND.code)
+      return res.status(HttpStatus.NOT_FOUND.code)
       .send({ status: false, message: `user with ${userEmail} was not found`});
       }else{
         const  user = results[0]
-        res.status(HttpStatus.OK.code).json({ user })
+        return res.status(HttpStatus.OK.code).json({ user })
       }
     })
   } catch (error) {
